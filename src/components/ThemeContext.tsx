@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import Header from "@/components/Header";
 import { Theme } from "@radix-ui/themes";
@@ -10,7 +9,11 @@ export const SavedJobsContext = createContext<{
   setSavedJobs?: (value: Openings[]) => void;
 }>({});
 
-export default function ThemeContext({ children }) {
+export default function ThemeContext({
+  children,
+}: Readonly<{
+  children: React.ReactNode;
+}>) {
   const [savedJobs, setSavedJobs] = useState<Openings[] | []>([]);
 
   console.log(savedJobs);

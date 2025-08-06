@@ -1,12 +1,11 @@
-//@ts-nocheck
 "use client";
 import { useSearchParams } from "next/navigation";
-import React, { useState } from "react";
+import React, { ChangeEvent, useState } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useRouter } from "next/navigation";
 
-export default function StaticFilterSidebar({ data }) {
+export default function Sidebar() {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -19,9 +18,9 @@ export default function StaticFilterSidebar({ data }) {
   const [type, setType] = useState(et ? et.split(",") : []);
   const [jobtype, setJobtype] = useState(jt || "remote");
   const [loc, setLoc] = useState(location || "");
-  const [salary, setSalary] = useState(ms || 0);
+  const [salary, setSalary] = useState<number>(ms ? Number.parseInt(ms) : 0);
 
-  const handleTypeChange = (e) => {
+  const handleTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const currtype = e.target.value;
     const checked = e.target.checked;
 

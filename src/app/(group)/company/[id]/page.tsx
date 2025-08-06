@@ -1,6 +1,7 @@
 import DeleteCompany from "@/components/DeleteCompany";
 import Job from "@/components/Job";
 import JobListAndReviews from "@/components/JobListAndReviews";
+import { getUserFromCookies } from "@/helper";
 import Link from "next/link";
 import { notFound } from "next/navigation";
 import React from "react";
@@ -10,6 +11,8 @@ type search = Promise<{
 }>;
 async function page({ params }: { params: search }) {
   const param = await params;
+
+  const user = await getUserFromCookies();
 
   const id = param.id;
   const res = await fetch(`http://localhost:3000/api/company/${id}`);
@@ -48,7 +51,7 @@ async function page({ params }: { params: search }) {
               </p>
             </div>
 
-            <DeleteCompany id={id} />
+            {user?.id == comp[0].ownerId && <DeleteCompany id={id} />}
           </div>
         </div>
       ) : (

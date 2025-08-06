@@ -1,10 +1,16 @@
-//@ts-nocheck
 "use client";
 import { Box, Button, Tabs, Text, TextArea } from "@radix-ui/themes";
 import React, { useState } from "react";
-import Job from "./Job";
+import Job, { openingWithCompany } from "./Job";
+import { Company, Openings, Review, User } from "../../generated/prisma";
 
-function JobListAndReviews({ comp, reviews }) {
+function JobListAndReviews({
+  comp,
+  reviews,
+}: {
+  comp: Company & { jobs: openingWithCompany[] };
+  reviews: (Review & { user: User })[];
+}) {
   const [review, setReview] = useState("");
 
   const handleReview = async () => {
@@ -18,6 +24,7 @@ function JobListAndReviews({ comp, reviews }) {
     const data = await res.json();
     if (data.success) {
       alert("review created");
+      setReview("");
     } else {
       alert(":/");
     }

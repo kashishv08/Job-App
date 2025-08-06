@@ -3,13 +3,13 @@ import Sidebar from "@/components/Sidebar";
 import prismaClient from "@/services/prisma";
 // import data from "@/data.js";
 
-type searchType = Promise<{
+export type searchType = {
   query: string;
   jt: string;
   et: string;
   loc: string;
   ms: string;
-}>;
+};
 async function page({ searchParams }: { searchParams: searchType }) {
   const search = await searchParams;
 
@@ -34,7 +34,7 @@ async function page({ searchParams }: { searchParams: searchType }) {
       </div>
 
       <div className="mt-[10px]">
-        <Sidebar data={data} />
+        <Sidebar />
       </div>
     </div>
   );

@@ -1,8 +1,8 @@
-//@ts-nocheck
 import { cookies } from "next/headers";
 import { NextResponse } from "next/server";
 import { verifyToken } from "./services/jwt";
 import prismaClient from "./services/prisma";
+import { User } from "../generated/prisma";
 
 export const getUserFromCookies = async () => {
   const cookie = await cookies();

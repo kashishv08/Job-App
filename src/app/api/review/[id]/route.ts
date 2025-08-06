@@ -1,4 +1,3 @@
-//@ts-nocheck
 import prismaClient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -21,7 +20,7 @@ export const GET = async (
       success: true,
       review,
     });
-  } catch (e) {
+  } catch (e: any) {
     console.log(e.message);
     // return NextResponse.json({
     //   success: false,

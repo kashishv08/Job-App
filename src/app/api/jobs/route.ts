@@ -1,4 +1,3 @@
-//@ts-nocheck
 import { searchType } from "@/app/(group)/page";
 import { getUserFromCookies } from "@/helper";
 import prismaClient from "@/services/prisma";
@@ -31,7 +30,12 @@ export const POST = async (req: NextRequest) => {
   const body = await req.json();
   const user = await getUserFromCookies();
 
-  console.log(body);
+  if (!user || !user.company) {
+    return NextResponse.json({
+      success: false,
+      message: "Unauthorized or company not linked",
+    });
+  }
 
   // try {
   const job = await prismaClient.openings.create({

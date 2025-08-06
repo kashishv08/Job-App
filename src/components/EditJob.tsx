@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import { UserContext } from "@/app/(group)/layout";
 import {
@@ -10,8 +9,9 @@ import {
   TextArea,
 } from "@radix-ui/themes";
 import React, { useContext, useState } from "react";
+import { Openings } from "../../generated/prisma";
 
-function EditJob({ job }) {
+function EditJob({ job }: { job: Openings }) {
   const { user } = useContext(UserContext);
   const [form, setForm] = useState({
     title: job.title,
@@ -19,7 +19,7 @@ function EditJob({ job }) {
     job_type: job.job_type,
     location: job.location,
     desc: job.desc,
-    salary: job.salary,
+    salary: job.salary.toString(),
     apply_link: job.apply_link,
   });
   const [loading, setLoading] = useState(false);

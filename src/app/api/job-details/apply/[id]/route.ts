@@ -20,6 +20,9 @@ export const GET = async (_: any, { params }: { params: { id: string } }) => {
         jobId: job_id,
         userId: user.id,
       },
+      include: {
+        user: true,
+      },
     });
     return NextResponse.json({
       success: true,

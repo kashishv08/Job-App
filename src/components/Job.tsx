@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import React, { useContext, useState } from "react";
 import { SavedJobsContext } from "./ThemeContext";
@@ -16,7 +15,7 @@ export default function Job({
   compact = true,
 }: {
   job: openingWithCompany;
-  compact: boolean;
+  compact?: boolean;
 }) {
   const { savedJobs, setSavedJobs } = useContext(SavedJobsContext);
   // console.log(loc);
@@ -85,7 +84,7 @@ export default function Job({
       </div>
 
       <p className="text-sm text-gray-700 mt-3 line-clamp-3">
-        {job?.desc?.slice(0, 150)}…
+        {job?.desc?.slice(0, 80)}…
       </p>
 
       <div className="flex justify-between items-center mt-4 text-sm">

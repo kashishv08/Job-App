@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
@@ -14,12 +13,13 @@ import { isLoggedIn, logout } from "@/actions/authActions";
 import AddJob from "./AddJob";
 import { UserContext } from "@/app/(group)/layout";
 import AddCompany from "./AddCompany";
+import { Openings } from "../../generated/prisma";
 
 export default function Header() {
   const [search, setSearch] = useState("");
   const [showMenu, setShowMenu] = useState(false);
   const { user } = useContext(UserContext);
-  const [sugg, setSugg] = useState([]);
+  const [sugg, setSugg] = useState<Openings[]>([]);
 
   const router = useRouter();
   const handleKeyDown = (e: any) => {
@@ -45,11 +45,11 @@ export default function Header() {
       }
     }
 
-    let x;
+    let x: NodeJS.Timeout;
     if (search) {
       x = setTimeout(() => {
         getSugg();
-      }, [1000]);
+      }, 1000);
     } else {
       setSugg([]);
     }

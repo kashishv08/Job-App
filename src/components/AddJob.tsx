@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use client";
 import { UserContext } from "@/app/(group)/layout";
 import {

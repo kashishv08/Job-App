@@ -30,6 +30,7 @@ export const GET = async () => {
   const companies = await prismaClient.company.findMany({
     include: {
       owner: true,
+      jobs: true,
     },
   });
   return NextResponse.json({
