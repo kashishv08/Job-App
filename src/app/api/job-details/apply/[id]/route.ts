@@ -1,0 +1,37 @@
+import { getUserFromCookies } from "@/helper";
+import prismaClient from "@/services/prisma";
+import { NextRequest, NextResponse } from "next/server";
+
+export const GET = async (_: any, { params }: { params: { id: string } }) => {
+  const job_id = params.id;
+  const user = await getUserFromCookies();
+
+  if (!user) {
+    return NextResponse.json({
+      success: false,
+      data: {
+        message: "user not found",
+      },
+    });
+  }
+  try {
+    const apply = await prismaClient.application.create({
+      data: {
+        jobId: job_id,
+        userId: user.id,
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      data: apply,
+    });
+  } catch (e: any) {
+    console.log(e.message);
+    return NextResponse.json({
+      success: false,
+      data: {
+        message: "something went wrong",
+      },
+    });
+  }
+};
