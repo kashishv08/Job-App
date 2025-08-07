@@ -50,7 +50,9 @@ function AddJob() {
     <div>
       <Dialog.Root>
         <Dialog.Trigger>
-          <Button>Post Job</Button>
+          <button className="w-full text-left px-2 py-2 hover:bg-blue-600 hover:text-white rounded text-sm">
+            Post Job
+          </button>
         </Dialog.Trigger>
 
         <Dialog.Content maxWidth="600px">

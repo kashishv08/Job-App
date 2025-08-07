@@ -5,9 +5,9 @@ import { createContext, useEffect, useState } from "react";
 import { Openings } from "../../generated/prisma";
 
 export const SavedJobsContext = createContext<{
-  savedJobs?: Openings[];
+  savedJobs: Openings[];
   setSavedJobs?: (value: Openings[]) => void;
-}>({});
+}>({ savedJobs: [] });
 
 export default function ThemeContext({
   children,

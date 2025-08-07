@@ -1,5 +1,6 @@
 "use client";
 import { Button } from "@radix-ui/themes";
+import { Trash } from "lucide-react";
 import React from "react";
 //@ts-ignore
 function DeleteCompany({ id }) {
@@ -18,7 +19,10 @@ function DeleteCompany({ id }) {
 
   return (
     <div>
-      <Button onClick={handleDelete}>Delete </Button>
+      <div className="hidden md:block">
+        <Button onClick={handleDelete}>Delete</Button>
+      </div>
+      <Trash className="block md:hidden" onClick={handleDelete} size={17} />
     </div>
   );
 }

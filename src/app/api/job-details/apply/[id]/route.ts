@@ -38,3 +38,34 @@ export const GET = async (_: any, { params }: { params: { id: string } }) => {
     });
   }
 };
+
+export const DELETE = async (
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  const { id } = await params;
+  const user = await getUserFromCookies();
+  if (!user) {
+    return NextResponse.json({
+      success: false,
+      message: "user not authenticated",
+    });
+  }
+  try {
+    const delApply = await prismaClient.application.deleteMany({
+      where: {
+        userId: user.id,
+        jobId: id,
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      message: "deleted",
+    });
+  } catch (e: any) {
+    return NextResponse.json({
+      success: false,
+      message: ":/",
+    });
+  }
+};

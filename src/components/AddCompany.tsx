@@ -30,7 +30,9 @@ function AddCompany() {
     <div>
       <Dialog.Root>
         <Dialog.Trigger>
-          <Button>Add Company</Button>
+          <button className="w-full text-left px-2 py-2 hover:bg-blue-600 hover:text-white rounded text-sm">
+            Add Company
+          </button>
         </Dialog.Trigger>
 
         <Dialog.Content maxWidth="450px">

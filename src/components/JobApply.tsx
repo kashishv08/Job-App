@@ -6,24 +6,31 @@ import { UserContext } from "@/app/(group)/layout";
 import { Openings } from "../../generated/prisma";
 import { openingWithCompany } from "./Job";
 
-function JobApply({ job }: { job: openingWithCompany }) {
+function JobApply({
+  job,
+  setIsApplied,
+  isApplied,
+}: {
+  job: openingWithCompany;
+  setIsApplied: (value: Boolean) => void;
+  isApplied: Boolean;
+}) {
   // console.log(job);
   const { user } = useContext(UserContext);
 
-  let apply;
   const handleApply = async () => {
     const res = await fetch(`/api/job-details/apply/${job?.id}`);
     const data = await res.json();
-    apply = data?.data;
     if (data.success) {
-      alert("applied :)");
+      console.log("applied :)");
+      setIsApplied(!isApplied);
     } else {
       alert(":/");
     }
   };
   return (
     <div>
-      {user?.id !== job.company.ownerId && (
+      {user?.id !== job.company?.ownerId && (
         <button
           className="bg-blue-600 hover:bg-blue-700 text-white px-3 py-1 rounded-md"
           onClick={handleApply}

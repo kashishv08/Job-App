@@ -8,7 +8,7 @@ import { MapPin } from "lucide-react";
 import JobApply from "./JobApply";
 import { Company, Openings } from "../../generated/prisma";
 
-export type openingWithCompany = Openings & { company: Company };
+export type openingWithCompany = Openings & { company?: Company };
 
 export default function Job({
   job,
@@ -27,22 +27,22 @@ export default function Job({
     }
   });
   const handleSaveJob = () => {
-    if (prevJob) {
-      const updatedJobs = savedJobs.filter((val) => val.id !== job.id);
-      setSavedJobs(updatedJobs);
-    } else {
-      setSavedJobs([...savedJobs, job]);
-    }
+    if (setSavedJobs)
+      if (prevJob) {
+        const updatedJobs = savedJobs?.filter((val) => val.id !== job.id) || [];
+        setSavedJobs(updatedJobs);
+      } else {
+        setSavedJobs([...savedJobs, job]);
+      }
   };
 
   return (
     <div
-      style={
+      className={`bg-white border rounded-md p-6 mb-4 shadow-sm hover:shadow-md transition m-[10px] ${
         compact
-          ? { width: "350px", height: "250px" }
-          : { width: "600px", maxWidth: "768px" }
-      }
-      className="bg-white border rounded-md p-6 mb-4 shadow-sm hover:shadow-md transition m-[10px]"
+          ? "w-[350px] h-[250px]"
+          : "lg:w-[600px] sm:w-[200px] md:w-[600px]"
+      }`}
     >
       <div className="flex justify-between items-start gap-3">
         <div className="flex gap-3 items-center min-w-0">
@@ -106,7 +106,12 @@ export default function Job({
           <span>
             <i>
               <Link href={`/company/${job.companyId}`}>
-                <img src={job.company.logo} alt="" height={100} width={100} />
+                <img
+                  src={job?.company?.logo || "http"}
+                  alt=""
+                  height={100}
+                  width={100}
+                />
               </Link>
             </i>
           </span>

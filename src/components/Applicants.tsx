@@ -21,9 +21,22 @@ function Applicants({ job }: { job: openingWithCompany }) {
     handleApplicants();
   }, []);
 
+  const handleDelApplicants = async (id: string) => {
+    const response = await fetch(`/api/applicants/${id}`, {
+      method: "DELETE",
+    });
+    const res = await response.json();
+    if (res.success) {
+      const updatedApplicants = applicants.filter((val) => val.id !== id);
+      setApplicants(updatedApplicants);
+      alert("applicants deleted");
+    } else {
+      alert(":/");
+    }
+  };
   return (
     <div>
-      {user?.id == job.company.ownerId && (
+      {user?.id == job.company?.ownerId && (
         <Dialog.Root>
           <Dialog.Trigger>
             <Button>View Applicants profile</Button>
@@ -34,7 +47,16 @@ function Applicants({ job }: { job: openingWithCompany }) {
             <Dialog.Description size="2" mb="4">
               {applicants.length > 0
                 ? applicants?.map((val) => {
-                    return <div>{val.user.name}</div>;
+                    return (
+                      <div className="flex justify-between">
+                        <div>{val.user.name}</div>
+                        <div>
+                          <Button onClick={() => handleDelApplicants(val.id)}>
+                            Delete
+                          </Button>
+                        </div>
+                      </div>
+                    );
                   })
                 : "No user applied"}
             </Dialog.Description>

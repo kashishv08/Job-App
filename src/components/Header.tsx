@@ -8,18 +8,22 @@ import {
   UserCircle2,
   ChevronDown,
   LogOut,
+  Menu,
 } from "lucide-react";
 import { isLoggedIn, logout } from "@/actions/authActions";
 import AddJob from "./AddJob";
 import { UserContext } from "@/app/(group)/layout";
 import AddCompany from "./AddCompany";
 import { Openings } from "../../generated/prisma";
+import { Button } from "@radix-ui/themes";
+import Profile from "./Profile";
+import Sidebar from "./Sidebar";
 
 export default function Header() {
   const [search, setSearch] = useState("");
-  const [showMenu, setShowMenu] = useState(false);
   const { user } = useContext(UserContext);
   const [sugg, setSugg] = useState<Openings[]>([]);
+  const [showSidebar, setShowSidebar] = useState<boolean>(false);
 
   const router = useRouter();
   const handleKeyDown = (e: any) => {
@@ -63,7 +67,7 @@ export default function Header() {
 
   return (
     <>
-      <nav className="w-full bg-white border-b shadow-sm px-6 py-3 flex items-center justify-between text-sm">
+      <nav className="w-full bg-white border-b shadow-sm px-6 py-3 flex items-center justify-between text-sm sticky top-0 z-20">
         <Link href="/" className="text-blue-700 text-2xl font-bold">
           JobFinder
         </Link>
@@ -71,7 +75,7 @@ export default function Header() {
         <div className="flex items-center gap-5">
           <Link
             href="/company"
-            className="text-sm text-gray-800 hover:text-blue-700 font-medium"
+            className="text-sm text-gray-800 hover:text-blue-700 font-medium hidden lg:block"
           >
             All Companies
           </Link>
@@ -80,59 +84,12 @@ export default function Header() {
               {user?.role == "user" && (
                 <Link
                   href="/savedJobs"
-                  className="text-sm text-gray-800 hover:text-blue-700 font-medium"
+                  className="text-sm text-gray-800 hover:text-blue-700 font-medium hidden lg-block"
                 >
                   Saved Jobs
                 </Link>
               )}
-
-              <div className="relative">
-                <button
-                  onClick={() => setShowMenu(!showMenu)}
-                  className="flex items-center gap-2 text-gray-700 hover:text-blue-700 focus:outline-none transition"
-                >
-                  <UserCircle2 size={22} />
-                  <ChevronDown size={16} />
-                </button>
-
-                {showMenu && (
-                  <div className="absolute right-0 mt-3 bg-white border border-gray-200 rounded-xl shadow-lg z-20 w-64 overflow-hidden text-sm">
-                    {/* Email Section */}
-                    <div className="px-4 py-3 border-b bg-gray-50">
-                      <p className="text-gray-800 font-medium truncate">
-                        {user.email}
-                      </p>
-                      <p className="text-xs text-gray-500">Logged in</p>
-                    </div>
-
-                    {/* Company Section */}
-                    {user?.company ? (
-                      <div className="border-b px-4 py-3 space-y-2">
-                        <AddJob />
-                        <Link
-                          href={`/company/${user.company.id}`}
-                          className="block text-blue-600 hover:underline"
-                        >
-                          View Company Details
-                        </Link>
-                      </div>
-                    ) : (
-                      <div className="border-b px-4 py-3">
-                        <AddCompany />
-                      </div>
-                    )}
-
-                    {/* Logout */}
-                    <button
-                      onClick={handleLogout}
-                      className="w-full text-left px-4 py-3 text-red-600 hover:bg-gray-100 flex items-center gap-2"
-                    >
-                      <LogOut size={16} />
-                      Logout
-                    </button>
-                  </div>
-                )}
-              </div>
+              <Profile />
             </>
           ) : (
             <div>
@@ -150,29 +107,45 @@ export default function Header() {
               </Link>
             </div>
           )}
-
-          {/* <Link href="/employers" className="ml-2 text-sm hover:text-blue-700"> */}
-          {/* </Link> */}
         </div>
       </nav>
 
-      <section className="w-full bg-gray-50 py-6 px-2 flex justify-center items-center">
+      <section className="w-full bg-gray-50 py-6 px-2 flex justify-center items-center relative">
+        {showSidebar && (
+          <div className=" fixed top-13 left-0 z-10 lg:hidden md:inline-block w-[70%] backdrop-blur-2xl">
+            <Sidebar
+              setShowSidebar={setShowSidebar}
+              showSidebar={showSidebar}
+            />
+          </div>
+        )}
         <form
           className="bg-white shadow-md rounded-lg flex md:flex-row gap-1 items-center px-6 py-4 w-[350px] justify-between relative"
           action={`/search?query=${search}`}
         >
-          <div className="w-full relative">
-            <div className="flex items-center w-full border rounded-md px-3 py-2">
-              <Search className="text-gray-400 mr-1" />
-              <input
-                type="text"
-                name="query"
-                value={search}
-                onKeyDown={handleKeyDown}
-                onChange={(e) => setSearch(e.target.value)}
-                placeholder="Search jobs..."
-                className="w-full outline-none text-sm"
-              />
+          <div className="w-full">
+            <div className="flex justify-between items-center w-full">
+              <div>
+                <button
+                  type="button"
+                  onClick={() => setShowSidebar(!showSidebar)}
+                  className="md:hidden lg:hidden sm:inline-block sm:w-[50%]"
+                >
+                  <Menu />
+                </button>
+              </div>
+              <div className="flex items-center border rounded-md px-3 py-2 sm:w-[50%] md:w-full lg:w-full">
+                <Search className="text-gray-400 mr-1" />
+                <input
+                  type="text"
+                  name="query"
+                  value={search}
+                  onKeyDown={handleKeyDown}
+                  onChange={(e) => setSearch(e.target.value)}
+                  placeholder="Search jobs..."
+                  className="lg:w-full outline-none text-sm "
+                />
+              </div>
             </div>
 
             {sugg.length > 0 && (
@@ -194,7 +167,7 @@ export default function Header() {
           <div>
             <button
               type="submit"
-              className="bg-blue-600 text-white px-5 py-0.5 rounded-md hover:bg-blue-700 text-sm"
+              className="hidden lg:inline-block sm:hidden md:inline-block bg-blue-600 text-white px-5 py-0.5 rounded-md hover:bg-blue-700 text-sm "
             >
               Find jobs
             </button>

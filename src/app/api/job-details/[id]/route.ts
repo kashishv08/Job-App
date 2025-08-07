@@ -1,3 +1,4 @@
+import { getUserFromCookies } from "@/helper";
 import prismaClient from "@/services/prisma";
 import { NextRequest, NextResponse } from "next/server";
 
@@ -6,6 +7,8 @@ export const GET = async (
   { params }: { params: { id: string } }
 ) => {
   const id = params.id;
+
+  const user = await getUserFromCookies();
 
   const job = await prismaClient.openings.findUnique({
     where: {
@@ -19,7 +22,9 @@ export const GET = async (
   if (job) {
     return NextResponse.json({
       success: true,
-      data: job,
+      data: {
+        ...job,
+      },
     });
   } else {
     return NextResponse.json({

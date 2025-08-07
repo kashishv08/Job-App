@@ -17,7 +17,7 @@ function Page() {
   return (
     <div className="flex flex-wrap">
       {savedJobs?.map((val) => {
-        return <Job job={val} key={val.job_id} />;
+        return <Job job={val} key={val.id} />;
       })}
     </div>
   );

@@ -9,7 +9,6 @@ export const POST = async (req: NextRequest) => {
       email: body.email,
     },
   });
-  console.log(isUser);
 
   if (isUser) {
     if (isUser.password == body.password && isUser.email == body.email) {

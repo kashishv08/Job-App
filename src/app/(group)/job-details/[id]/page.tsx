@@ -1,7 +1,10 @@
 import Applicants from "@/components/Applicants";
+import ApplyDeleteToggle from "@/components/ApplyDeleteToggle";
 import EditDelJob from "@/components/EditDelJob";
 import JobApply from "@/components/JobApply";
 import data from "@/data";
+import { getUserFromCookies } from "@/helper";
+import prismaClient from "@/services/prisma";
 import React from "react";
 
 type search = Promise<{
@@ -11,16 +14,28 @@ type search = Promise<{
 export default async function Page({ params }: { params: search }) {
   const param = await params;
   let id = param.id;
+  const user = await getUserFromCookies();
 
   const res = await fetch(`http://localhost:3000/api/job-details/${id}`);
   const data = await res.json();
   const job = data.data;
 
+  let userHasApplied = false;
+
+  if (user) {
+    const applicants = await prismaClient.application.findMany({
+      where: {
+        userId: user.id,
+        jobId: id,
+      },
+    });
+    if (applicants.length > 0) userHasApplied = true;
+  }
+
   if (!job) return <p className="p-4 text-red-500">Job not found</p>;
 
   return (
     <div className="min-h-screen w-full max-w-5xl mx-auto p-8 bg-white shadow rounded">
-      {/* Header */}
       <div className="flex justify-between items-center flex-wrap mb-8 border-b pb-4">
         <div>
           <h1 className="text-3xl font-bold text-gray-800">{job.title}</h1>
@@ -29,7 +44,6 @@ export default async function Page({ params }: { params: search }) {
           </div>
         </div>
 
-        {/* View Applicants Button */}
         <div className="mt-4 sm:mt-0">
           <Applicants job={job} />
         </div>
@@ -45,7 +59,10 @@ export default async function Page({ params }: { params: search }) {
       </div>
 
       <div className="flex justify-end items-center gap-4">
-        <JobApply job={job} />
+        <ApplyDeleteToggle
+          userHasApplied={userHasApplied as Boolean}
+          job={job}
+        />
         <EditDelJob job={job} />
       </div>
     </div>

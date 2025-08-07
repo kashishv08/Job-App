@@ -19,3 +19,27 @@ export const GET = async (
     data: currapplicant,
   });
 };
+
+export const DELETE = async (
+  req: NextRequest,
+  { params }: { params: { id: string } }
+) => {
+  const { id } = await params;
+
+  try {
+    const delApplicants = await prismaClient.application.delete({
+      where: {
+        id: id,
+      },
+    });
+    return NextResponse.json({
+      success: true,
+      message: "Applocants Deleted",
+    });
+  } catch (e: any) {
+    return NextResponse.json({
+      success: false,
+      message: ":/",
+    });
+  }
+};

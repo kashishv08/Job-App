@@ -15,7 +15,7 @@ async function page({ searchParams }: { searchParams: searchType }) {
 
   const query = search.query || "";
   const jt = search.jt || "remote";
-  const et = search.et ? search.et.split(",") : [];
+  const et = search.et ? search.et.split(",") : ["fulltime"];
   const loc = search.loc || "";
   const ms = search.ms ? Number.parseInt(search.ms) : 0;
 
@@ -26,15 +26,14 @@ async function page({ searchParams }: { searchParams: searchType }) {
   const jobs = data.job;
 
   return (
-    <div className="flex justify-between m-[20px]">
+    <div className="flex justify-around m-[20px]">
+      <div className="mt-[10px] hidden lg:block md:block sm:hidden">
+        <Sidebar setShowSidebar={false} showSidebar={false} />
+      </div>
       <div>
         {jobs.map((val: openingWithCompany) => {
           return <Job job={val} compact={false} key={val.id} />;
         })}
-      </div>
-
-      <div className="mt-[10px]">
-        <Sidebar />
       </div>
     </div>
   );

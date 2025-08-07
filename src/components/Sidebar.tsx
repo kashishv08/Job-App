@@ -4,8 +4,15 @@ import React, { ChangeEvent, useState } from "react";
 import Slider from "rc-slider";
 import "rc-slider/assets/index.css";
 import { useRouter } from "next/navigation";
+import { ChevronLeft, Menu } from "lucide-react";
 
-export default function Sidebar() {
+export default function Sidebar({
+  showSidebar,
+  setShowSidebar,
+}: {
+  showSidebar: boolean;
+  setShowSidebar?: (value: Boolean) => void;
+}) {
   const searchParams = useSearchParams();
   const router = useRouter();
 
@@ -18,7 +25,9 @@ export default function Sidebar() {
   const [type, setType] = useState(et ? et.split(",") : []);
   const [jobtype, setJobtype] = useState(jt || "remote");
   const [loc, setLoc] = useState(location || "");
-  const [salary, setSalary] = useState<number>(ms ? Number.parseInt(ms) : 0);
+  const [salary, setSalary] = useState<number | number[]>(
+    ms ? Number.parseInt(ms) : 0
+  );
 
   const handleTypeChange = (e: ChangeEvent<HTMLInputElement>) => {
     const currtype = e.target.value;
@@ -32,6 +41,7 @@ export default function Sidebar() {
   };
 
   const applyFilter = () => {
+    setShowSidebar(!showSidebar);
     const url = `/search?query=${query}&jt=${jobtype}&et=${type.join(
       ","
     )}&loc=${loc}&ms=${salary}`;
@@ -40,7 +50,11 @@ export default function Sidebar() {
 
   return (
     <aside className="w-full md:w-64 bg-white p-4 rounded-lg shadow border">
-      <h2 className="text-lg font-semibold mb-4">Filter Jobs</h2>
+      <div className="flex gap-1">
+        <ChevronLeft onClick={() => setShowSidebar(!showSidebar)} />
+        <h2 className="text-lg font-semibold mb-4">Filter Jobs</h2>
+      </div>
+
       <div className="mb-5">
         <label className="block text-sm font-medium mb-1">Location</label>
         <input
