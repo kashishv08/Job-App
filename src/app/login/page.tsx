@@ -2,7 +2,6 @@
 import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { login } from "@/actions/authActions";
 import { X } from "lucide-react";
 
 export default function SignUpPage() {
@@ -11,70 +10,88 @@ export default function SignUpPage() {
   const [error, setError] = useState("");
   const router = useRouter();
 
-  const handleloginSubmit = async (e: FormEvent<HTMLFormElement>) => {
+  const handleLoginSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const userObj = {
-      email,
-      password,
-    };
 
-    const response = await fetch("http://localhost:3000/api/login", {
-      method: "POST",
-      body: JSON.stringify(userObj),
-      credentials: "include",
-    });
-    const res = await response.json();
-    console.log(res);
+    const userObj = { email, password };
 
-    if (res.redirect) {
-      window.location.href = res.url;
-      return;
-    }
+    try {
+      const response = await fetch("http://localhost:3000/api/login", {
+        method: "POST",
+        body: JSON.stringify(userObj),
+        credentials: "include",
+        headers: { "Content-Type": "application/json" },
+      });
 
-    if (res?.success === false) {
-      setError(res.message);
+      if (response.redirected) {
+        window.location.href = response.url;
+        return;
+      } else if (!response.ok) {
+        const data = await response.json();
+        setError(data.message || "Login failed");
+      }
+    } catch (err) {
+      setError("Something went wrong. Please try again.");
     }
   };
+
   return (
-    <div className="fixed w-full  h-full top-0 left-0 z-50 flex flex-col items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white w-[400px] p-6 rounded-md shadow-sm border items-center justify-center">
-        <h3 className="text-lg font-semibold mb-4 justify-between flex">
-          <div>Login</div>
+    <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-4">
+      <div className="bg-white w-full max-w-md p-8 rounded-2xl shadow-lg border border-gray-200 relative">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-6">
+          <h3 className="text-2xl font-bold text-gray-800">Login</h3>
+          <button onClick={() => router.back()}>
+            <X className="text-gray-600 hover:text-gray-800 transition" />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleLoginSubmit} className="space-y-4">
           <div>
-            <button onClick={() => router.back()}>
-              {" "}
-              <X className="cursor-pointer" />
-            </button>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              required
+              className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setEmail(e.target.value)}
+            />
           </div>
-        </h3>
 
-        <form onSubmit={handleloginSubmit} method="POST">
-          <label className=" text-sm font-medium mb-1">Email</label>
-          <input
-            type="email"
-            className="border border-gray-400 rounded-sm w-full px-3 py-2 mb-4 text-sm"
-            required
-            name="email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              required
+              className="w-full px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
 
-          <label className=" text-sm font-medium mb-1">Password</label>
-          <input
-            type="password"
-            className="border border-gray-400 rounded-sm w-full px-3 py-2 mb-4 text-sm"
-            required
-            name="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
+          {error && <p className="text-red-500 text-sm">{error}</p>}
 
           <button
             type="submit"
-            className="bg-blue-400 hover:bg-blue-300 w-full py-2 rounded-md font-semibold text-sm"
+            className="w-full py-2 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
           >
-            Submit
+            Login
           </button>
-          {error && <p>{error}</p>}
         </form>
+
+        {/* Footer */}
+        <p className="text-center text-sm text-gray-600 mt-4">
+          Don't have an account?{" "}
+          <Link
+            href="/signup"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Sign Up
+          </Link>
+        </p>
       </div>
     </div>
   );

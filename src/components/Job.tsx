@@ -7,6 +7,7 @@ import { IoBookmarkOutline } from "react-icons/io5";
 import { MapPin } from "lucide-react";
 import JobApply from "./JobApply";
 import { Company, Openings } from "../../generated/prisma";
+import { UserContext } from "@/app/(group)/layout";
 
 export type openingWithCompany = Openings & { company?: Company };
 
@@ -17,6 +18,7 @@ export default function Job({
   job: openingWithCompany;
   compact?: boolean;
 }) {
+  const { user } = useContext(UserContext);
   const { savedJobs, setSavedJobs } = useContext(SavedJobsContext);
   // console.log(loc);
   // console.log(savedJobs);
@@ -39,9 +41,7 @@ export default function Job({
   return (
     <div
       className={`bg-white border rounded-md p-6 mb-4 shadow-sm hover:shadow-md transition m-[10px] ${
-        compact
-          ? "w-[350px] h-[250px]"
-          : "lg:w-[600px] sm:w-[200px] md:w-[600px]"
+        compact ? "w-[350px] h-[250px]" : "w-full"
       }`}
     >
       <div className="flex justify-between items-start gap-3">
@@ -94,7 +94,7 @@ export default function Job({
 
         <div className="flex gap-3 items-center">
           <Link
-            href={`/job-details/${job.id}`}
+            href={`${user ? `/job-details/${job.id}` : "/login"}`}
             className="text-blue-600 hover:underline"
           >
             See details
@@ -105,7 +105,7 @@ export default function Job({
         <div className="items-end flex flex-row-reverse mt-[25px]">
           <span>
             <i>
-              <Link href={`/company/${job.companyId}`}>
+              <Link href={`${user ? `/company/${job.companyId}` : "/login"}`}>
                 <img
                   src={job?.company?.logo || "http"}
                   alt=""

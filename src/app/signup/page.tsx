@@ -2,7 +2,6 @@
 import React, { FormEvent, useState } from "react";
 import Link from "next/link";
 import { useRouter } from "next/navigation";
-import { signup } from "@/actions/authActions";
 import { X } from "lucide-react";
 
 export default function SignUpPage() {
@@ -10,90 +9,127 @@ export default function SignUpPage() {
   const [username, setUsername] = useState("");
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [role, setRole] = useState("");
+  const [role, setRole] = useState("user");
   const [error, setError] = useState("");
 
   const router = useRouter();
 
   const handleSubmit = async (e: FormEvent<HTMLFormElement>) => {
     e.preventDefault();
-    const userObj = {
-      name,
-      username,
-      email,
-      password,
-      role,
-    };
+
+    const userObj = { name, username, email, password, role };
 
     const response = await fetch("/api/signup", {
       method: "POST",
+      headers: { "Content-Type": "application/json" },
       body: JSON.stringify(userObj),
     });
     const res = await response.json();
+
     if (!res.success) {
-      console.log(res.message);
       setError(res.message);
+    } else {
+      router.push("/login");
     }
   };
-  return (
-    <div className="fixed w-full  h-full top-0 left-0 z-50 flex flex-col items-center justify-center p-4 bg-black/40 backdrop-blur-sm">
-      <div className="bg-white w-[400px] p-6 rounded-md shadow-sm border items-center justify-center">
-        <h3 className="text-lg font-semibold mb-4 justify-between flex">
-          <div>Sign up</div>
-          <div>
-            <button onClick={() => router.push("/")}>
-              {" "}
-              <X />
-            </button>
-          </div>
-        </h3>
 
-        <form onSubmit={handleSubmit} method="POST">
-          <label className=" text-sm font-medium mb-1">Name</label>
-          <input
-            type="text"
-            className="border border-gray-400 rounded-sm w-full px-3 py-2 mb-4 text-sm"
-            required
-            name="name"
-            onChange={(e) => setName(e.target.value)}
-          />
-          <label className=" text-sm font-medium mb-1">Username</label>
-          <input
-            type="text"
-            className="border border-gray-400 rounded-sm w-full px-3 py-2 mb-4 text-sm"
-            required
-            name="username"
-            onChange={(e) => setUsername(e.target.value)}
-          />
-          <label className=" text-sm font-medium mb-1">Email</label>
-          <input
-            type="email"
-            className="border border-gray-400 rounded-sm w-full px-3 py-2 mb-4 text-sm"
-            required
-            name="email"
-            onChange={(e) => setEmail(e.target.value)}
-          />
-          <label className=" text-sm font-medium mb-1">Password</label>
-          <input
-            type="password"
-            className="border border-gray-400 rounded-sm w-full px-3 py-2 mb-4 text-sm"
-            required
-            name="password"
-            onChange={(e) => setPassword(e.target.value)}
-          />
-          <select name="role" id="" onChange={(e) => setRole(e.target.value)}>
-            <option value="admin">Admin</option>
-            <option value="user">User</option>
-          </select>
+  return (
+    <div className="inset-0 z-50 flex items-center justify-center bg-black/50 backdrop-blur-sm p-2 ">
+      <div className="h-[570px] bg-white w-full max-w-md p-2 sm:p-8 rounded-2xl shadow-lg border border-gray-200 mx-2 my-1">
+        {/* Header */}
+        <div className="flex justify-between items-center mb-4 sm:mb-6">
+          <h3 className="text-2xl font-bold text-gray-800">Sign Up</h3>
+          <button
+            onClick={() => router.push("/")}
+            className="text-gray-600 hover:text-gray-800"
+          >
+            <X size={24} />
+          </button>
+        </div>
+
+        {/* Form */}
+        <form onSubmit={handleSubmit} className="space-y-3 sm:space-y-4">
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Name
+            </label>
+            <input
+              type="text"
+              required
+              className="w-full px-3 sm:px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setName(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Username
+            </label>
+            <input
+              type="text"
+              required
+              className="w-full px-3 sm:px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setUsername(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Email
+            </label>
+            <input
+              type="email"
+              required
+              className="w-full px-3 sm:px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setEmail(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Password
+            </label>
+            <input
+              type="password"
+              required
+              className="w-full px-3 sm:px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+              onChange={(e) => setPassword(e.target.value)}
+            />
+          </div>
+
+          <div>
+            <label className="block text-sm font-medium text-gray-700 mb-1">
+              Role
+            </label>
+            <select
+              value={role}
+              onChange={(e) => setRole(e.target.value)}
+              className="w-full px-3 sm:px-4 py-2 border rounded-lg text-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500"
+            >
+              <option value="admin">Admin</option>
+              <option value="user">User</option>
+            </select>
+          </div>
+
+          {error && <p className="text-red-500 text-sm">{error}</p>}
+
           <button
             type="submit"
-            className="bg-blue-400 hover:bg-blue-300 w-full py-2 rounded-md font-semibold text-sm"
+            className="w-full py-2 sm:py-3 bg-blue-600 text-white font-semibold rounded-lg hover:bg-blue-700 transition"
           >
-            Submit
+            Sign Up
           </button>
-          already have an account <Link href="/login">login</Link>
-          {error && <p>{error}</p>}
         </form>
+
+        <p className="text-center text-sm text-gray-600 mt-3 sm:mt-4">
+          Already have an account?{" "}
+          <Link
+            href="/login"
+            className="text-blue-600 hover:underline font-medium"
+          >
+            Login
+          </Link>
+        </p>
       </div>
     </div>
   );

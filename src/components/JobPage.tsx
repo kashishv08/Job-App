@@ -24,32 +24,36 @@ function JobPage({ jobs }: { jobs: openingWithCompany[] }) {
       </div>
 
       <div className="flex items-center gap-4 mt-8">
-        <Link
-          href={`/?page=${currpage - 1}`}
-          className={`px-4 py-2 rounded-md border text-sm font-medium ${
-            currpage == 1
-              ? "bg-gray-200 text-gray-400 cursor-not-allowed"
-              : "bg-white text-blue-600 hover:bg-blue-100 border-blue-400"
-          }`}
-        >
-          {"<<"}
-        </Link>
-
+        {currpage == 1 ? (
+          <button className="px-4 py-2 rounded-md border text-sm font-medium bg-gray-200 text-gray-400 cursor-not-allowed">
+            {"<<"}
+          </button>
+        ) : (
+          <Link
+            href={`/?page=${currpage - 1}`}
+            className={`px-4 py-2 rounded-md border text-sm font-medium ${
+              currpage == 1
+                ? "bg-gray-200 text-gray-400 cursor-not-allowed"
+                : "bg-white text-blue-600 hover:bg-blue-100 border-blue-400"
+            }`}
+          >
+            {"<<"}
+          </Link>
+        )}
         <span className="text-sm font-semibold text-gray-700">
           Page {currpage}
         </span>
-
-        {jobs.length >= 1 ? (
+        {jobs.length < 10 ? (
+          <button className="px-4 py-2 rounded-md border text-sm font-medium bg-gray-200 text-gray-400 cursor-not-allowed">
+            {">>"}
+          </button>
+        ) : (
           <Link
             href={`/?page=${currpage + 1}`}
             className="px-4 py-2 rounded-md border bg-white text-blue-600 hover:bg-blue-100 border-blue-400 text-sm font-medium"
           >
             {">>"}
           </Link>
-        ) : (
-          <button className="px-4 py-2 rounded-md border text-sm font-medium bg-gray-200 text-gray-400 cursor-not-allowed">
-            {">>"}
-          </button>
         )}
       </div>
     </div>

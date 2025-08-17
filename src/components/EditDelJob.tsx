@@ -21,7 +21,7 @@ function EditDelJob({ job }: { job: openingWithCompany }) {
   };
   return (
     <div>
-      {user?.id == job.company.ownerId && (
+      {user?.id == job.company?.ownerId && (
         <div className="flex gap-3">
           <Button onClick={handleDel}>Delete</Button>
           <EditJob job={job} />

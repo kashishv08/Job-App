@@ -1,7 +1,5 @@
 import Job, { openingWithCompany } from "@/components/Job";
 import Sidebar from "@/components/Sidebar";
-import prismaClient from "@/services/prisma";
-// import data from "@/data.js";
 
 export type searchType = {
   query: string;
@@ -10,6 +8,7 @@ export type searchType = {
   loc: string;
   ms: string;
 };
+
 async function page({ searchParams }: { searchParams: searchType }) {
   const search = await searchParams;
 
@@ -26,16 +25,34 @@ async function page({ searchParams }: { searchParams: searchType }) {
   const jobs = data.job;
 
   return (
-    <div className="flex justify-around m-[20px]">
-      <div className="mt-[10px] hidden lg:block md:block sm:hidden">
-        <Sidebar setShowSidebar={false} showSidebar={false} />
-      </div>
-      <div>
-        {jobs.map((val: openingWithCompany) => {
-          return <Job job={val} compact={false} key={val.id} />;
-        })}
-      </div>
-    </div>
+    <main className="flex w-full p-[10px] ">
+      {/* Filters Sidebar */}
+      <aside className="md:w-[30%] w-0">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4 border-b pb-2 hidden md:block">
+          🔍 Filters
+        </h2>
+        <Sidebar />
+      </aside>
+
+      {/* Job List Section */}
+      <section className="lg:w-[70%] mr-[10px] md:w-full sm:w-full">
+        <h2 className="text-lg font-semibold text-gray-700 mb-4  pb-2">
+          💼 Job Listings
+        </h2>
+
+        <div className="">
+          {jobs.length > 0 ? (
+            jobs.map((val: openingWithCompany) => (
+              <Job job={val} compact={false} key={val.id} />
+            ))
+          ) : (
+            <p className="text-gray-500 text-sm mt-4">
+              No jobs found. Try different filters.
+            </p>
+          )}
+        </div>
+      </section>
+    </main>
   );
 }
 

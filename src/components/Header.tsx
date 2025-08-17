@@ -23,7 +23,6 @@ export default function Header() {
   const [search, setSearch] = useState("");
   const { user } = useContext(UserContext);
   const [sugg, setSugg] = useState<Openings[]>([]);
-  const [showSidebar, setShowSidebar] = useState<boolean>(false);
 
   const router = useRouter();
   const handleKeyDown = (e: any) => {
@@ -111,30 +110,13 @@ export default function Header() {
       </nav>
 
       <section className="w-full bg-gray-50 py-6 px-2 flex justify-center items-center relative">
-        {showSidebar && (
-          <div className=" fixed top-13 left-0 z-10 lg:hidden md:inline-block w-[70%] backdrop-blur-2xl">
-            <Sidebar
-              setShowSidebar={setShowSidebar}
-              showSidebar={showSidebar}
-            />
-          </div>
-        )}
         <form
           className="bg-white shadow-md rounded-lg flex md:flex-row gap-1 items-center px-6 py-4 w-[350px] justify-between relative"
           action={`/search?query=${search}`}
         >
           <div className="w-full">
             <div className="flex justify-between items-center w-full">
-              <div>
-                <button
-                  type="button"
-                  onClick={() => setShowSidebar(!showSidebar)}
-                  className="md:hidden lg:hidden sm:inline-block sm:w-[50%]"
-                >
-                  <Menu />
-                </button>
-              </div>
-              <div className="flex items-center border rounded-md px-3 py-2 sm:w-[50%] md:w-full lg:w-full">
+              <div className="flex items-center border rounded-md px-3 py-2 sm:w-[50%] md:w-full lg:w-full ml-[30px] md:ml-0">
                 <Search className="text-gray-400 mr-1" />
                 <input
                   type="text"
@@ -143,7 +125,7 @@ export default function Header() {
                   onKeyDown={handleKeyDown}
                   onChange={(e) => setSearch(e.target.value)}
                   placeholder="Search jobs..."
-                  className="lg:w-full outline-none text-sm "
+                  className="lg:w-full outline-none text-sm  "
                 />
               </div>
             </div>
@@ -167,7 +149,7 @@ export default function Header() {
           <div>
             <button
               type="submit"
-              className="hidden lg:inline-block sm:hidden md:inline-block bg-blue-600 text-white px-5 py-0.5 rounded-md hover:bg-blue-700 text-sm "
+              className="hidden md:block display-none bg-blue-600 text-white px-5 py-0.5 rounded-md hover:bg-blue-700 text-sm "
             >
               Find jobs
             </button>
