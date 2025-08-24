@@ -1,4 +1,3 @@
-//@ts-nocheck
 "use server";
 import { generateToken, verifyToken } from "@/services/jwt";
 import prismaClient from "@/services/prisma";
@@ -38,7 +37,7 @@ export const signup = async (userObj: any) => {
         message: "User already Exist",
       };
     }
-  } catch (err) {
+  } catch (err: any) {
     console.log(err.message);
   }
 };

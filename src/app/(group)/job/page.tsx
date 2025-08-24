@@ -1,7 +1,5 @@
-import JobPage from "@/components/JobPage";
-import prismaClient from "@/services/prisma";
 import { openingWithCompany } from "@/components/Job";
-import LandingPage from "@/components/LandingPage";
+import JobPage from "@/components/JobPage";
 
 export type searchType = Promise<{
   page: string;

@@ -1,7 +1,7 @@
-//@ts-nocheck
 import data from "@/data";
 import prismaClient from "@/services/prisma";
 import React from "react";
+import { Openings } from "../../../generated/prisma";
 
 function page() {
   async function addData() {
@@ -19,8 +19,8 @@ function page() {
       };
     });
 
-    await prismaClient.openings.createMany({
-      data: newData,
+    const job = await prismaClient.openings.createMany({
+      data: newData as Openings[],
     });
   }
   return (
@@ -28,7 +28,6 @@ function page() {
       <button className="border-4" type="submit">
         submit
       </button>
-      {console.log("added")}
     </form>
   );
 }
